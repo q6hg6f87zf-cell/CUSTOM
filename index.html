@@ -66,198 +66,162 @@
     box-shadow: 0 0 15px rgba(196, 130, 72, 0.4) !important;
   }
 
-  .tab.active {
-    color: #e2a870 !important;
-    border-bottom-color: #c48248 !important;
-  }
-
-  .arsenal-tab.active {
-    border-color: #c48248 !important;
-    background: rgba(196, 130, 72, 0.15) !important;
-    color: #e2a870 !important;
-  }
-
   *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   
   body {
+    font-family: 'Inter', sans-serif;
+    background: #050510; 
+    color: #e8e0ff; 
+    min-height: 100vh; 
+    overflow-x: hidden;
+  }
 
-  font-family: 'Inter', sans-serif;
-  background: #050510; /* Solid dark base */
-  color: #e8e0ff; 
-  min-height: 100vh; 
-  overflow-x: hidden;
-}
+  /* --- ABSOLUTE SYNC BACKGROUND & CANVAS --- */
+  #bg-layer {
+    position: fixed; 
+    top: -10%; left: -10%; 
+    width: 120%; height: 120%;
+    background-image: url('IMG_5121.png');
+    background-size: cover; 
+    background-position: center;
+    z-index: -2; 
+    pointer-events: none;
+    transition: transform 0.1s ease-out;
+    filter: brightness(0.8);
+  }
 
-/* --- ABSOLUTE SYNC BACKGROUND & CANVAS --- */
-#bg-layer {
-  position: fixed; 
-  top: -10%; left: -10%; 
-  width: 120%; height: 120%;
-  background-image: url('IMG_5121.png');
-  background-size: cover; 
-  background-position: center;
-  z-index: -2; /* Sits at the very back */
-  pointer-events: none;
-  transition: transform 0.1s ease-out;
-  filter: brightness(0.8);
-}
+  canvas#c { 
+    position: fixed; 
+    top: 0; left: 0; 
+    width: 100%; height: 100%; 
+    z-index: -1; 
+    pointer-events: none; 
+  }
 
-canvas#c { 
-  position: fixed; 
-  top: 0; left: 0; 
-  width: 100%; height: 100%; 
-  z-index: -1; /* Above background, but behind the GM Suite UI */
-  pointer-events: none; /* Crucial: lets you click through the particles */
-}
+  /* Layout */
+  #app{max-width:480px;margin:0 auto;min-height:100vh;background:transparent}
+  .header{background:rgba(10,8,30,0.98);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:50}
+  .header-title{font-weight:bold;font-size:0.9rem;color:#fff;letter-spacing:2px}
+  .header-title span{color:var(--purple-light)}
+  .header-sub{font-size:0.55rem;color:var(--dim);letter-spacing:1px;font-family:Arial,sans-serif}
+  
+  /* ==========================================================================
+     UNIFIED TABS COMPONENT SYSTEM
+     ========================================================================== */
+  .tab-container {
+    display: flex; gap: 4px; overflow-x: auto;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+  }
+  .tab-container::-webkit-scrollbar { display: none; }
 
+  .tab-item {
+    padding: 8px 14px; font-size: 0.7rem; font-family: 'Inter', Arial, sans-serif;
+    color: var(--dim); background: transparent; border: none; cursor: pointer;
+    white-space: nowrap; transition: all 0.2s ease-in-out;
+    flex-shrink: 0; scroll-snap-align: start;
+  }
+  .tab-item:hover, .tab-item:focus-visible { color: #fff; outline: none; }
 
-/* Layout */
-#app{max-width:480px;margin:0 auto;min-height:100vh;background:transparent}
-.header{background:rgba(10,8,30,0.98);border-bottom:1px solid var(--border);padding:12px 16px;position:sticky;top:0;z-index:50}
-.header-title{font-weight:bold;font-size:0.9rem;color:#fff;letter-spacing:2px}
-.header-title span{color:var(--purple-light)}
-.header-sub{font-size:0.55rem;color:var(--dim);letter-spacing:1px;font-family:Arial,sans-serif}
-.header-badge{background:linear-gradient(135deg,var(--purple),#3f51b5);color:#fff;font-size:0.58rem;font-weight:bold;padding:3px 10px;border-radius:20px;letter-spacing:1px;box-shadow:0 0 12px rgba(138,90,220,0.4)}
-/* Tab bar */
-.tabs{display:flex;overflow-x:auto;gap:0;background:rgba(5,4,18,0.98);border-bottom:1px solid var(--border);scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.tabs::-webkit-scrollbar{display:none}
-.tab{padding:10px 12px;font-size:0.65rem;color:var(--dim);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all 0.15s;font-family:Arial,sans-serif;flex-shrink:0}
-.tab.active{color:var(--purple-light);border-bottom-color:var(--purple)}
-/* Panel */
-.panel{padding:12px 12px 80px}
-/* Cards */
-.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);}
-.card-glow{background:linear-gradient(135deg,rgba(30,20,60,0.7),rgba(10,8,30,0.8));border:1px solid var(--border-glow);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 0 30px rgba(138,90,220,0.15); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);}
+  /* Modifier: Underlined (Main Nav, Roster, HQ) */
+  .tab-item--underline {
+    border-bottom: 2px solid transparent; border-radius: 0; padding: 10px 12px;
+  }
+  .tab-item--underline.active {
+    color: #e2a870; border-bottom-color: #c48248; font-weight: bold;
+  }
 
-/* Buttons */
-.btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-family:Arial,sans-serif;font-size:0.75rem;font-weight:bold;transition:all 0.15s;gap:5px}
-.btn-purple{background:linear-gradient(135deg,var(--purple),#3f51b5);color:#fff;box-shadow:0 0 15px rgba(138,90,220,0.3)}
-.btn-sm{padding:5px 10px;font-size:0.65rem;border-radius:6px;border:1px solid var(--border);background:rgba(138,90,220,0.15);color:var(--purple-light);cursor:pointer;font-family:Arial,sans-serif}
-.btn-red{background:rgba(80,10,10,0.9);color:var(--red);border:1px solid rgba(239,83,80,0.3)}
-.btn-green{background:rgba(10,50,20,0.9);color:var(--green);border:1px solid rgba(102,187,106,0.3)}
-.btn-full{width:100%;display:block;text-align:center}
-/* Inputs */
-.input{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.78rem;font-family:Arial,sans-serif;width:100%;outline:none}
-.input:focus{border-color:var(--purple)}
-.select{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.75rem;font-family:Arial,sans-serif;width:100%;outline:none;-webkit-appearance:none}
-.textarea{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.75rem;font-family:Arial,sans-serif;width:100%;outline:none;resize:vertical;min-height:70px}
-.label{display:block;font-size:0.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-family:Arial,sans-serif}
-/* Tags */
-.tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:0.58rem;font-family:Arial,sans-serif;margin:1px}
-/* HP bar */
-.hp-bar-wrap{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:3px}
-.hp-bar{height:100%;border-radius:3px;transition:width 0.3s}
-/* Stat bars */
-.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:8px}
-.stat-row{}
-.stat-label{display:flex;justify-content:space-between;font-size:0.58rem;font-family:Arial,sans-serif;margin-bottom:2px}
-.stat-bar-wrap{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
-.stat-bar{height:100%;border-radius:2px}
-/* Modal */
-.modal-overlay{display:none;position:fixed;inset:0;background:rgba(2,1,15,0.97);z-index:200;overflow-y:auto;padding:16px}
-.modal-overlay.active{display:block}
-.modal-box{background:rgba(15,12,40,0.99);border:1px solid var(--border-glow);border-radius:12px;padding:18px;max-width:480px;margin:0 auto;box-shadow:0 0 40px rgba(138,90,220,0.2)}
-/* Player card */
-.player-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px;transition:border-color 0.2s}
-.player-card.protected{border-color:rgba(255,213,79,0.4)}
-.player-card.dead{opacity:0.6;border-color:rgba(239,83,80,0.3)}
-/* Consequence pills */
-.pill-curse{background:rgba(50,10,60,0.8);color:#e1bee7}
-.pill-wanted{background:rgba(60,10,10,0.8);color:#ffcdd2}
-.pill-exile{background:rgba(20,20,30,0.8);color:#bbb}
-.pill-servant{background:rgba(5,30,25,0.8);color:#b2dfdb}
-/* Dice */
-.dice-svg{display:block;margin:0 auto}
-/* Battle */
-.consequence-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-/* Map SVG */
-#map-svg{width:100%;cursor:pointer}
-/* Roll box */
-.roll-box{background:rgba(8,6,25,0.9);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px}
-/* Divider */
-.divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:12px 0}
-/* Active session indicator */
-.session-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#66bb6a;box-shadow:0 0 6px #66bb6a;animation:pulse 1.5s ease-in-out infinite;margin-right:5px}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-/* Raid phase bar */
-.phase-bar{display:flex;gap:3px}
-.phase-pip{flex:1;height:5px;border-radius:3px;transition:all 0.2s}
-/* Spin animation for dice */
-@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
-.spinning{animation:spin 0.15s linear infinite;transform-origin:center}
-/* Fade in */
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.fade-in{animation:fadeIn 0.25s ease forwards}
-/* Search */
-.search-wrap{position:relative;margin-bottom:10px}
-.search-wrap input{padding-left:30px}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--dim);font-size:0.8rem;pointer-events:none}
-/* Empty state */
-.empty-state{text-align:center;color:var(--dimmer);padding:50px 16px;font-size:0.82rem}
-.empty-icon{font-size:2.5rem;margin-bottom:10px}
-/* Tooltip-style info bar */
-.info-bar{background:rgba(138,90,220,0.08);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:0.68rem;color:var(--dim);font-family:Arial,sans-serif;margin-bottom:10px;line-height:1.5}
-/* Classes lore */
-.lore-tab-bar{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px}
-.lore-tab{padding:5px 10px;border-radius:14px;font-size:0.62rem;font-family:Arial,sans-serif;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--dim);transition:all 0.15s}
-.lore-tab.active{background:rgba(138,90,220,0.2);color:var(--purple-light);border-color:var(--purple)}
-/* Villain phases */
-.phase-card{border-radius:8px;padding:12px;margin-bottom:8px}
-/* Base rooms */
-.room-card{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
-/* Inventory */
-.item-card{background:rgba(8,6,25,0.8);border-radius:6px;padding:8px 10px;margin-bottom:6px}
-/* Log feed */
-.log-entry{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
-.log-time{flex-shrink:0;width:52px;text-align:right;font-size:0.58rem;color:var(--dim);font-family:Arial,sans-serif;padding-top:1px}
-.log-icon{flex-shrink:0;width:20px;text-align:center;font-size:0.8rem}
-.log-body{flex:1}
-.log-who{font-size:0.7rem;font-weight:bold;font-family:Arial,sans-serif}
-.log-what{font-size:0.72rem;color:var(--text);font-family:Arial,sans-serif;margin-top:1px}
-/* Responsive overflow */
-.overflow-x{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-.overflow-x::-webkit-scrollbar{display:none}
+  /* Modifier: Pill (Compendium, Arsenal, Lore) */
+  .tab-item--pill {
+    border-radius: 20px; border: 1px solid var(--border);
+    background: rgba(10, 8, 30, 0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+  .tab-item--pill.active {
+    border-color: #c48248; background: rgba(196, 130, 72, 0.25);
+    color: #e2a870; font-weight: bold;
+  }
 
-/* Arsenal Styles */
-.arsenal-nav { display:flex; gap:6px; overflow-x:auto; margin-bottom:14px; padding-bottom:5px; scrollbar-width:none; }
-.arsenal-nav::-webkit-scrollbar { display:none; }
-.arsenal-tab { padding:8px 14px; border-radius:20px; cursor:pointer; border:1px solid var(--border); background:rgba(10,8,30,0.8); color:var(--dim); white-space:nowrap; font-size:0.7rem; font-family:Arial,sans-serif; transition:all 0.2s; }
-.arsenal-tab.active { border-color:var(--purple); background:rgba(138,90,220,0.15); color:var(--purple-light); font-weight:bold; }
-.item-details { display:none; padding:0 12px 12px; border-top:1px solid rgba(255,255,255,0.05); margin-top:10px; padding-top:10px; }
-.item-card.open .item-details { display:block; }
-.item-card.open { box-shadow:0 0 18px rgba(138,90,220,0.15); border-color:var(--purple); }
-.rarity-badge { font-size:0.6rem; padding:2px 8px; border-radius:10px; font-weight:bold; font-family:Arial,sans-serif; }
-.log-entry {
-  background: rgba(10, 8, 30, 0.9) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  padding: 10px !important;
-  border-radius: 8px !important;
-  margin-bottom: 6px !important;
-  border: 1px solid rgba(196, 130, 72, 0.2) !important;
-}
-.info-bar {
-  background: rgba(10, 8, 30, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(196, 130, 72, 0.3) !important;
-  color: #fff !important;
-}
+  /* Panel */
+  .panel{padding:12px 12px 80px}
+  /* Cards */
+  .card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:10px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);}
+  .card-glow{background:linear-gradient(135deg,rgba(30,20,60,0.7),rgba(10,8,30,0.8));border:1px solid var(--border-glow);border-radius:12px;padding:16px;margin-bottom:12px;box-shadow:0 0 30px rgba(138,90,220,0.15); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);}
 
-.arsenal-tab, .lore-tab {
-  background: rgba(10, 8, 30, 0.85) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  color: #fff !important;
-}
-
-.arsenal-tab.active, .lore-tab.active {
-  background: rgba(196, 130, 72, 0.25) !important;
-  border-color: #c48248 !important;
-  color: #e2a870 !important;
-}
-
+  /* Buttons */
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:9px 16px;border-radius:8px;border:none;cursor:pointer;font-family:Arial,sans-serif;font-size:0.75rem;font-weight:bold;transition:all 0.15s;gap:5px}
+  .btn-sm{padding:5px 10px;font-size:0.65rem;border-radius:6px;border:1px solid var(--border);background:rgba(138,90,220,0.15);color:var(--purple-light);cursor:pointer;font-family:Arial,sans-serif}
+  .btn-red{background:rgba(80,10,10,0.9);color:var(--red);border:1px solid rgba(239,83,80,0.3)}
+  .btn-green{background:rgba(10,50,20,0.9);color:var(--green);border:1px solid rgba(102,187,106,0.3)}
+  .btn-full{width:100%;display:block;text-align:center}
+  /* Inputs */
+  .input{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.78rem;font-family:Arial,sans-serif;width:100%;outline:none}
+  .input:focus{border-color:var(--purple)}
+  .select{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.75rem;font-family:Arial,sans-serif;width:100%;outline:none;-webkit-appearance:none}
+  .textarea{background:rgba(10,8,30,0.9);border:1px solid var(--border);border-radius:6px;padding:8px 10px;color:#fff;font-size:0.75rem;font-family:Arial,sans-serif;width:100%;outline:none;resize:vertical;min-height:70px}
+  .label{display:block;font-size:0.6rem;color:var(--dim);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:4px;font-family:Arial,sans-serif}
+  /* Tags */
+  .tag{display:inline-block;padding:2px 7px;border-radius:8px;font-size:0.58rem;font-family:Arial,sans-serif;margin:1px}
+  /* HP bar */
+  .hp-bar-wrap{height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;margin-top:3px}
+  .hp-bar{height:100%;border-radius:3px;transition:width 0.3s}
+  /* Stat bars */
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px;margin-top:8px}
+  .stat-label{display:flex;justify-content:space-between;font-size:0.58rem;font-family:Arial,sans-serif;margin-bottom:2px}
+  .stat-bar-wrap{height:3px;background:rgba(255,255,255,0.05);border-radius:2px;overflow:hidden}
+  .stat-bar{height:100%;border-radius:2px}
+  /* Modal */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(2,1,15,0.97);z-index:200;overflow-y:auto;padding:16px}
+  .modal-overlay.active{display:block}
+  .modal-box{background:rgba(15,12,40,0.99);border:1px solid var(--border-glow);border-radius:12px;padding:18px;max-width:480px;margin:0 auto;box-shadow:0 0 40px rgba(138,90,220,0.2)}
+  /* Consequence pills */
+  .pill-curse{background:rgba(50,10,60,0.8);color:#e1bee7}
+  .pill-wanted{background:rgba(60,10,10,0.8);color:#ffcdd2}
+  .pill-exile{background:rgba(20,20,30,0.8);color:#bbb}
+  .pill-servant{background:rgba(5,30,25,0.8);color:#b2dfdb}
+  /* Battle */
+  .consequence-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  #map-svg{width:100%;cursor:pointer}
+  .roll-box{background:rgba(8,6,25,0.9);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:8px}
+  .divider{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:12px 0}
+  .session-live{display:inline-block;width:7px;height:7px;border-radius:50%;background:#66bb6a;box-shadow:0 0 6px #66bb6a;animation:pulse 1.5s ease-in-out infinite;margin-right:5px}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .phase-bar{display:flex;gap:3px}
+  .phase-pip{flex:1;height:5px;border-radius:3px;transition:all 0.2s}
+  @keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+  .spinning{animation:spin 0.15s linear infinite;transform-origin:center}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .fade-in{animation:fadeIn 0.25s ease forwards}
+  .empty-state{text-align:center;color:var(--dimmer);padding:50px 16px;font-size:0.82rem}
+  .empty-icon{font-size:2.5rem;margin-bottom:10px}
+  .phase-card{border-radius:8px;padding:12px;margin-bottom:8px}
+  .room-card{display:flex;justify-content:space-between;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+  .item-card{background:rgba(8,6,25,0.8);border-radius:6px;padding:8px 10px;margin-bottom:6px}
+  
+  /* Log Feed overrides */
+  .log-entry{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+  .log-time{flex-shrink:0;width:52px;text-align:right;font-size:0.58rem;color:var(--dim);font-family:Arial,sans-serif;padding-top:1px}
+  .log-icon{flex-shrink:0;width:20px;text-align:center;font-size:0.8rem}
+  .log-body{flex:1}
+  .log-who{font-size:0.7rem;font-weight:bold;font-family:Arial,sans-serif}
+  .log-what{font-size:0.72rem;color:var(--text);font-family:Arial,sans-serif;margin-top:1px}
+  
+  .log-entry {
+    background: rgba(10, 8, 30, 0.9) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    padding: 10px !important;
+    border-radius: 8px !important;
+    margin-bottom: 6px !important;
+    border: 1px solid rgba(196, 130, 72, 0.2) !important;
+  }
+  .info-bar {
+    background: rgba(10, 8, 30, 0.85) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+    border: 1px solid rgba(196, 130, 72, 0.3) !important;
+    color: #fff !important;
+    border-radius: 6px; padding: 8px 12px; font-size: 0.68rem; font-family: Arial, sans-serif; margin-bottom: 10px; line-height: 1.5;
+  }
   </style>
 </head>
 <body>
@@ -268,23 +232,17 @@ canvas#c {
     <h1 style="color: #d35400; font-size: 2.5rem; letter-spacing: 15px; text-shadow: 0 0 20px #9b1b1b, 0 0 10px #000; margin: 0; text-transform: uppercase; font-family: 'Cinzel', serif;">MOON SQUAD</h1>
 </div>
 
-
 <div id="app">
-          <div class="header" style="background: url('IMG_5225.png') center center / cover no-repeat; height: 110px; padding: 12px 16px; border-bottom: 1px solid #c48248;">
+  <div class="header" style="background: url('IMG_5225.png') center center / cover no-repeat; height: 110px; padding: 12px 16px; border-bottom: 1px solid #c48248;">
     <div style="display: flex; justify-content: flex-end;">
-      
       <div style="text-align: right;">
         <div class="header-badge" style="box-shadow: 0 2px 8px rgba(0,0,0,0.8);">⚡ LIVE READY</div>
         <div style="font-size: 0.55rem; color: #fff; margin-top: 4px; font-family: Arial, sans-serif; font-weight: bold; text-shadow: 0 2px 4px #000;">MAY 2, 2026</div>
       </div>
-      
     </div>
   </div>
 
-
-
-
-  <div id="tab-bar" class="tabs"></div>
+  <div id="tab-bar"></div>
   <div id="panel" class="panel"></div>
 </div>
 <div id="player-modal" class="modal-overlay"></div>
@@ -315,10 +273,10 @@ Merchant:{STR:3,DEF:3,INT:6,WIS:5,SPD:5,CHA:8,LCK:8},
 Bard:    {STR:3,DEF:2,INT:5,WIS:6,SPD:6,CHA:10,LCK:5}
 };
 const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7};
-  const RACES = {
+
+const RACES = {
   "Dust-Walker": {
-    name: "Dust-Walker", 
-    icon: "🏜️",
+    name: "Dust-Walker", icon: "🏜️",
     tagline: "Nomads of the Edge. They walked too close to the void, and the void walked back.",
     stats: {STR: 0, DEF: 0, INT: 0, WIS: 2, SPD: 1, CHA: -2, LCK: 0},
     ability: "Void-Scarred — Once per session, ignore a magical attack or curse entirely.",
@@ -329,8 +287,6 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     },
     vulnerability: "Fragile Mind: -2 to saves against Psychic or Mind-Control effects due to the void-thinning of their psyche.",
     interaction_mod: "Dogs and natural animals growl or flee when a Dust-Walker is within 10 feet.",
-    
-    // --- EXPANDED LORE & DEPTH ---
     biological_quirk: "Photosensitive and Void-Saturated: Their prolonged exposure to the Hollow's Edge has physically altered their biology. In complete darkness, their pupils dilate to cover the entire eye, granting near-perfect night vision (+2 Perception). However, their skin is highly sensitive to unfiltered UV light, causing it to crack and ash if exposed to direct, un-shielded sunlight, resulting in a -1 penalty to hit and extreme physical discomfort.",
     social_standing: "Outcasts and Omen-Bringers: In civilized settlements, Dust-Walkers are treated with a mix of deep superstition and outright hostility. Tavern owners will often turn them away, and merchants regularly charge a 5% 'Void Tax' just to scrub the counter after they leave. However, underground syndicates and desperate explorers pay top dollar for their tracking skills, as no one else can navigate the shifting topography of the Edge.",
     philosophy: "The Void is not an ending; it is a conversation: To a Dust-Walker, silence is heavy and the emptiness speaks. They believe that fighting the decay of the world is a fool's errand. Instead, one must learn the rhythm of the collapse and move with it. Survival isn't about building fortresses; it's about being light enough to outrun the fall.",
@@ -339,10 +295,8 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     lore: "Generations ago, these were the frontier families and scouts who lived on the extreme borders of the Crumbling Kingdom. When the realm shifted and the Edge began to devour the land, they didn't flee inward; they adapted. They are a quiet, insular people who trade in whispers and old survival techniques. They cover themselves head-to-toe not just for protection from the elements, but to hide the unnatural, faint violet glow that the void left stained behind their eyes.",
     character_description: "Height ranges from 5'10\" to 6'4\". They possess lean, lanky, and severely weathered builds, looking as though the moisture has been slowly baked out of them. They dress in heavily layered, dust-caked leather dusters, rugged canvas pants, and thick boots designed for treacherous terrain. Their faces are usually obscured by heavy bandanas and wide-brimmed western hats. Their most defining feature is their eyes: the irises carry a faint, unnatural violet luminescence, heavily contrasting with their dirt-smudged, sun-deprived skin. Their movements are deliberate, eerily quiet, and lack wasted energy."
   },
-
   "Garrison-Born": {
-    name: "Garrison-Born", 
-    icon: "🛡️",
+    name: "Garrison-Born", icon: "🛡️",
     tagline: "The stubborn descendants of a ruined empire.",
     stats: {STR: 1, DEF: 2, INT: 0, WIS: 0, SPD: -1, CHA: 0, LCK: 0},
     ability: "Iron Discipline — Immune to 'Fear' status. +1 to all combat rolls when fighting directly adjacent to an ally.",
@@ -353,8 +307,6 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     },
     vulnerability: "Heavy-Footed: Suffer a -4 penalty to all Stealth checks involving water or metal flooring.",
     interaction_mod: "Merchants give them 10% off gear, but expect them to defend the town for free if an alarm sounds.",
-    
-    // --- EXPANDED LORE & DEPTH ---
     biological_quirk: "Dense Bone Structure: Centuries of consuming specialized military alchemical rations have permanently altered their genetic makeup. Their bones are nearly twice as dense as a normal human's. This allows them to take 50% less damage from blunt force trauma or long falls, but it completely robs them of buoyancy. A Garrison-Born will sink like an anvil in deep water and cannot swim unassisted.",
     social_standing: "Relics of Authority: They walk through the world like landlords whose lease expired a century ago. In rural villages, they are respected and feared, often able to bypass low-level militia checkpoints purely on the authority of their posture. In lawless hubs, they are targeted as symbols of an oppressive past. People expect them to be the meat-shields in any crisis, demanding their protection as a lingering obligation of their bloodline.",
     philosophy: "Steel lasts longer than hope; polished steel lasts forever: They view the apocalypse not as the end of the world, but as a test of structural integrity. Emotion, panic, and individuality are structural flaws. Routine, chain of command, and maintaining one's equipment are the highest virtues. A well-maintained rifle is a prayer; a perfectly executed tactical retreat is a sacrament.",
@@ -363,10 +315,8 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     lore: "When the Crumbling Kingdom fractured and society dissolved into chaos, the grand military apparatus refused to dissolve with it. Cut off from command, individual battalions entrenched themselves in fortresses, passing down ranks, protocols, and grudges through the generations. They treat the current broken world as a temporary occupation zone, treating every minor skirmish like a calculated campaign for a throne that turned to dust centuries ago.",
     character_description: "Height ranges from 5'8\" to 6'2\". They possess incredibly dense, broad-shouldered, and muscular builds, shaped by generations of strict physical regimens. They visually represent battlefield grit: battered plate armor integrated with heavy chainmail, worn over thick, utilitarian coats. Their clothing features tarnished kingdom crests and faded insignias. Hair is kept practically cropped or shaved. Their faces and bodies are maps of heavy, jagged scarring, and their posture is always rigid, scanning the room for tactical advantages."
   },
-
   "The Sunken": {
-    name: "The Sunken", 
-    icon: "⚓",
+    name: "The Sunken", icon: "⚓",
     tagline: "Information is a currency, and they run the mint.",
     stats: {STR: -1, DEF: 0, INT: 2, WIS: 0, SPD: 0, CHA: 2, LCK: 1},
     ability: "Silver Tongue — Start the game with a 'Black Ledger.' 10% discount on all Black Market trades.",
@@ -377,8 +327,6 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     },
     vulnerability: "Dehydrated: If they don't consume double the water of a normal human, they suffer 'Exhaustion' levels twice as fast.",
     interaction_mod: "Guards follow them constantly in shops. They are known for 'disappearing' small, expensive items.",
-    
-    // --- EXPANDED LORE & DEPTH ---
     biological_quirk: "Amphibious Adaptation: Generation after generation spent in the submerged, flooded levels of the old world has altered their respiratory systems. They possess subtly recessed gills along their ribcages, allowing them to hold their breath in high-stress situations for up to 10 minutes. Furthermore, their eyes possess a secondary membrane, allowing them to see perfectly in murky water, and they suffer absolutely zero movement penalties when submerged.",
     social_standing: "High-Society Syndicates: The Sunken are the aristocrats of the underworld. They are incredibly wealthy, universally distrusted, and absolutely essential to the global economy. Commoners view them as loan sharks and mobsters, while the elite view them as necessary evils. Because everyone knows The Sunken deal in blackmail, NPCs are inherently guarded around them, imposing a -1 penalty to friendly persuasion simply because no one wants to end up in their ledger.",
     philosophy: "A secret is only valuable if someone is willing to kill for it: Violence is cheap; leverage is priceless. The Sunken believe that physical warfare is a failure of negotiation. True power is walking into a room unarmed and having the most dangerous person there offer you a chair because you know what they did five summers ago. Everything—and everyone—has a price.",
@@ -387,10 +335,8 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     lore: "When the great shift drowned the grand libraries and banking districts of the old world, the archivists and financiers didn't drown; they evolved. Trapped in the flooded metropolis, they formed syndicates to protect the restricted knowledge and pre-shift artifacts they controlled. Today, they operate out of water-logged manors and hidden subterranean docks, running a massive shadow economy based entirely on debts, favors, and hoarded history.",
     character_description: "Height ranges from 5'5\" to 6'0\". They have sleek, sharp, and flawlessly poised builds. Visually, they combine high-class elegance with aquatic decay: immaculately tailored dark coats that are permanently damp or water-stained at the hems, paired with ornate, oxidized silver jewelry. Their hair is eternally slicked back, and their skin has a slightly pale, cold sheen. Their expressions are calculating, aloof, and carry the distinct look of someone calculating exactly how much you are worth in an auction."
   },
-
   "Deep-Claimed": {
-    name: "Deep-Claimed", 
-    icon: "⛏️",
+    name: "Deep-Claimed", icon: "⛏️",
     tagline: "Trapped in the dark, they became harder than the stone.",
     stats: {STR: 2, DEF: 1, INT: -1, WIS: 0, SPD: 0, CHA: -1, LCK: 0},
     ability: "Stonebreaker — Can mine Hollow Ore without tools and naturally detect structural traps in the dark.",
@@ -401,8 +347,6 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     },
     vulnerability: "Light-Blinded: Suffer -3 to all rolls for 1 hour after being exposed to a 'Flashbang' or magical bright light.",
     interaction_mod: "Other races find their 'Ore-Skin' unsettling; -2 to CHA when attempting to seduce or charm non-Deep-Claimed.",
-    
-    // --- EXPANDED LORE & DEPTH ---
     biological_quirk: "Ore-Skin Calcification: To survive the starvation of the deep caverns, they consumed trace amounts of volatile Hollow Ore. Over generations, this ore has integrated into their physiology. Their skin is incredibly rough, providing a natural +1 to DEF when unarmored, as blunt blades literally chip against their flesh. However, this calcification makes wearing traditional metal armor excruciatingly uncomfortable, causing a claustrophobic reaction (-1 SPD).",
     social_standing: "The Exploited Foundation: They are the ultimate labor class, viewed by surface-dwellers as little more than talking heavy machinery. In industrial hubs and mining towns, they are welcomed for their unmatched work ethic. In high-society or political arenas, they are treated as uneducated brutes. They are the backbone of the realm's infrastructure, yet they are rarely allowed to sit at the tables of the cities they built.",
     philosophy: "The mountain gives nothing; you must take it: Deep-Claimed do not believe in luck, divine intervention, or charity. They believe entirely in the physics of effort. If you strike the stone long enough, it breaks. If you endure the dark long enough, you survive. They value sheer, unrelenting persistence above all intellectual or magical pursuits.",
@@ -411,10 +355,8 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     lore: "When the realm fractured, thousands of miners and underground survivalists were entirely sealed off in the deepest subterranean networks. Cut off from surface agriculture, they survived by farming bioluminescent fungi and integrating the magical Hollow Ore into their diet. Decades in the pitch black transformed them into fiercely territorial, hulking behemoths who worship the veins of the earth and distrust anything that requires sunlight to grow.",
     character_description: "Height ranges massively from 6'0\" to 6'8\". They are hulking, barrel-chested, and violently muscular, built to swing hammers for 16 hours a day. Their skin is deathly pale, heavily stained with permanent soot, and visibly textured with raw, faintly glowing veins of ore that protrude from their forearms and neck. They wield heavy, brutal iron mining tools (picks, sledgehammers) as weapons. They rarely wear full shirts, preferring thick leather harnesses rigged with glowing ore chunks that illuminate their subterranean surroundings."
   },
-
   "Aether-Kith": {
-    name: "Aether-Kith", 
-    icon: "✨",
+    name: "Aether-Kith", icon: "✨",
     tagline: "The remnants of the high-culture, now drifting between states of matter.",
     stats: {STR: -2, DEF: -1, INT: 1, WIS: 1, SPD: 0, CHA: 1, LCK: 3},
     ability: "Phase Shift — Once per combat, move through a solid object or enemy without provoking an attack.",
@@ -425,8 +367,6 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
     },
     vulnerability: "Disrupted Form: Take 1d4 damage every turn they end their movement inside a strong magnetic or anti-magic field.",
     interaction_mod: "People often speak loudly and slowly to them, assuming they aren't fully 'there,' which gives a +1 to deceptive misdirection.",
-    
-    // --- EXPANDED LORE & DEPTH ---
     biological_quirk: "Semi-Ethereal Mass: The Aether-Kith are not entirely bound to the physical plane. They possess almost zero physical weight, meaning they never suffer from 'Encumbered' penalties and leave no footprints on soft ground. However, this lack of mass is dangerous; a strong gust of wind or a kinetic shockwave/blast effect will deal double damage to them, easily launching them across a battlefield.",
     social_standing: "Coveted Curiosities: To the average citizen, an Aether-Kith is a ghost, treated with a mix of awe, religious reverence, or profound unease. To scholars and underground syndicates, they are priceless commodities. They are heavily targeted by kidnappers and dark mages who wish to harvest their essence or study their shifting atomic structure. They rarely find a place to belong and are usually treated as 'objects' rather than people.",
     philosophy: "Form is temporary; energy is eternal: They view the physical struggles of the other races—wars over land, hoarding of gold—as deeply tragic and short-sighted. They believe that true enlightenment comes from shedding attachments to the material world. To an Aether-Kith, the mind and the spirit are the only things that truly exist; the body is merely a temporary, highly flawed vessel.",
@@ -439,70 +379,46 @@ const CLASS_PACK_CAP = {Warrior:8,Wizard:6,Rogue:10,Healer:8,Merchant:12,Bard:7}
 
 const COMPANION_TYPES = {
   "Void-Hound": {
-    name: "Void-Hound", 
-    icon: "🐾", 
-    hp: 5,
-    statBuff: {CHA: 1}, 
+    name: "Void-Hound", icon: "🐾", hp: 5, statBuff: {CHA: 1}, 
     active_ability: "Echo Bark — Command the hound to 'speak'. It releases a concussive soundwave. Enemies within 15 feet must roll to resist being 'Stunned' for one turn, and hidden enemies are instantly revealed.",
     passive_trait: "Scent of the Collapse — The hound will naturally whine and pace when a magical trap, void anomaly, or ambush is in the next room, giving the player a +2 to initiative or trap detection.",
     maintenance: "Feeds on raw meat and negative energy. Cannot be healed by standard medical kits; must 'consume' the shadow of a defeated enemy to regain HP.",
     behavior_quirk: "They do not sleep. When the player rests, the hound simply sits rigidly, staring directly into the darkest corner of the room.",
     lore: "Forged from the ash of the Edge and bound by dark magic. They are fiercely loyal to whoever binds them, but deeply unsettling to anyone who isn't their master, often viewed as walking bad omens.",
-    
-    // --- NEW DESCRIPTIVE DEPTH ---
     physical_description: "Roughly the size of a large timber wolf, but lacking solid flesh. Its body is composed of tightly swirling black ash, compacted shadow, and glowing orange cinders that flare up when it is agitated. It has no discernible eyes, only two hollow, jagged indentations in its skull where faint, violet smoke constantly leaks and trails behind it as it moves.",
     sensory_profile: "Smells strongly of ozone, sulfur, and a freshly extinguished campfire. It leaves no footprints, only faint scorch marks. It does not pant or breathe. When it barks or snarls, the sound does not seem to come from its mouth; instead, it is a localized, bass-heavy rumble that echoes off the walls behind you, creating a disorienting, surround-sound effect of pure malice."
   },
-
   "Scavenger Crow": {
-    name: "Scavenger Crow", 
-    icon: "🐦", 
-    hp: 3,
-    statBuff: {LCK: 1},
+    name: "Scavenger Crow", icon: "🐦", hp: 3, statBuff: {LCK: 1},
     active_ability: "Pilfer — Point at a small, unsecured object up to 30 feet away (a key, a potion, a coin pouch). The crow will fly out, grab it, and return it to your inventory without breaking your stealth.",
     passive_trait: "Grave Robber (+10% Loot Luck) — After every combat encounter, the crow will automatically scavenge the area, rolling an independent loot check to find extra credits, ammo, or small trinkets.",
     maintenance: "Requires constant bribery. If you do not give it a 'shiny' object (even a worthless coin) once every few days, it will start dropping your inventory items out of spite.",
     behavior_quirk: "It mimics human voices perfectly, but only repeats the last words of people it has watched die.",
     lore: "Mutated corvids that survived the shift by becoming smarter and meaner. Having one on your shoulder marks you as a hardened survivor, but also guarantees that civilized folk will keep a very close eye on their pockets.",
-    
-    // --- NEW DESCRIPTIVE DEPTH ---
     physical_description: "Abnormally massive, easily the size of a wild turkey, with heavily scarred, leathery skin visible beneath patchy plumage. Its feathers are a greasy, iridescent black, constantly mottled with pale dust. Its beak is jagged, serrated like a rusted bread knife. It often decorates itself, weaving stolen copper wire into its feathers or forcing stolen rings onto its thick, scaly talons.",
     sensory_profile: "Emits a smell like old copper coins and dried blood. Its movements are heralded by the heavy, leathery *thwump* of its wings and the dry, rhythmic clicking of its beak. When it 'speaks,' there is no bird-like squawk; it produces an eerily flawless, uncompressed recording of human terror, matching the exact pitch, breathlessness, and panic of the voice it stole."
   },
-
   "Clockwork Mule": {
-    name: "Clockwork Mule", 
-    icon: "📦", 
-    hp: 8,
-    statBuff: {DEF: 1}, 
+    name: "Clockwork Mule", icon: "📦", hp: 8, statBuff: {DEF: 1}, 
     active_ability: "Mobile Barricade — Command the Mule to lock its heavy hydraulic joints. It becomes an immovable object, granting +2 DEF to any ally using it as cover. It cannot move or carry items while locked.",
     passive_trait: "Tireless Hauler (+5 Inventory Slots) — As long as it is functioning, you ignore standard encumbrance rules for heavy gear like mining tools or excess armor.",
     maintenance: "Cannot be healed with magic or medicine. Requires 'Scrap Parts' and oil to repair. If it hits 0 HP, it drops all its cargo on the ground and must be rebooted at a workbench.",
     behavior_quirk: "Its gears grind endlessly, and it occasionally vents hot steam out of unexpected valves. Imposes a permanent -1 penalty to the group's Stealth checks while moving.",
     lore: "Relics of the old mining guilds from the Crumbling Kingdom. They are entirely emotionless, relentlessly grinding forward as long as their mainspring is wound, completely indifferent to the apocalypse happening around them.",
-    
-    // --- NEW DESCRIPTIVE DEPTH ---
     physical_description: "Built like a mechanical, headless bulldog the size of a draft horse. Plated in thick, tarnished iron and bronze boilerplate armor, heavily dented from years of rockfalls. Faded, painted kingdom crests are still barely visible on its flanks. Its four legs are driven by exposed hydraulic pistons, ending in heavy, flat iron hooves fitted with worn-out rubber shock absorbers.",
     sensory_profile: "Radiates an immense amount of physical heat. The air around it constantly smells of burning coal, hot engine oil, and heated brass. It is incredibly loud—even when standing still, there is a rhythmic, heavy ticking from its internal clockwork. When it walks, there is a violent *clank-hiss* of unlubricated pneumatics and metal grinding against stone."
   },
-
   "Mender Sprite": {
-    name: "Mender Sprite", 
-    icon: "✨", 
-    hp: 2,
-    statBuff: {WIS: 1},
+    name: "Mender Sprite", icon: "✨", hp: 2, statBuff: {WIS: 1},
     active_ability: "Cauterizing Sap — Command the sprite to heal a target. Restores 1d6 HP by violently sealing the wound with glowing, burning sap. The extreme pain gives the target a -1 to their next attack roll.",
     passive_trait: "Guardian Light (Auto-stabilize) — Emits a soft, 10-foot radius of bioluminescent light. Once per session, if the player drops to 0 HP, the sprite will instantly kamikaze into the wound, stabilizing the player at 1 HP but dying in the process.",
     maintenance: "Feeds on ambient magic and Hollow Ore dust. Highly fragile; takes double damage from physical area-of-effect attacks.",
     behavior_quirk: "Hums constantly. When it is agitated or sensing danger, the light it emits flashes violently through different spectrums, acting as an unintended warning siren.",
     lore: "Bioluminescent, semi-sentient aether entities that hover around dense magical areas. They are aggressively helpful, seeking out open wounds to seal them, though their brutal survival-instinct methods are often intensely painful for the patient.",
-    
-    // --- NEW DESCRIPTIVE DEPTH ---
     physical_description: "It is not humanoid in the slightest. It appears as a jagged, floating shard of crystallized amber or a dying, contained star. Its core is made of thick, pulsing liquid gold, surrounded by erratic, orbiting rings of raw, crackling aether energy. It constantly drips a viscous, glowing sap that evaporates before it hits the ground.",
     sensory_profile: "Smells intensely sharp, like crushed pine needles mixed with heavy electrical ozone. It sounds like a high-tension power line caught in high wind, emitting a constant, vibrating hum. When it applies its healing sap, it produces a sudden, violent sizzle—exactly like a slab of raw meat being thrown onto a white-hot iron skillet."
   }
 };
-
 
 const TRAIT_TIERS = [
 {level:"⚠ Weakened",  range:[1,4],  color:"#ef5350",bonus:-1},
@@ -1057,6 +973,7 @@ watchtower:{name:"The Watchtower",icon:"🗼",desc:"Advance warning of incoming 
 {level:3,cost:22000,bonus:"Full intel. Remove one encounter from incoming raid."}
 ]}
 };
+
 const PERSONAL_QUARTERS = {
   bunk: { name: "The Bunk", icon: "🛏️", tiers: [
     {level:1, cost:2000, bonus: "+2 Temp HP after rest."},
@@ -1189,7 +1106,7 @@ const WORLD_NPCS = {
       { item: "Purify Void Infection from Item", cost: "-1 Temp Stat Debuff or 1 Max HP", chance: "Always" }
     ]
   },
-    "Krell the Foreman": {
+  "Krell the Foreman": {
     name: "Krell", title: "The Bedrock Foreman", icon: "🔨", region: "Underground Caverns", danger: 3,
     role: "Master Smith", color: "#ffb300",
     quote: "The mountain don't care about your stories. It only cares about the weight of your swing.",
@@ -1204,18 +1121,14 @@ const WORLD_NPCS = {
       { item: "Heavy Work Gloves (Passive: +1 STR checks)", cost: "500c", chance: "100%" }
     ]
   }
-
 };
-
-
 
 const WORLD_LOCATIONS = [
 {id:"hq",name:"Moon Squad HQ",short:"The HQ",icon:"🏠",color:"#ffd54f",x:50,y:48,danger:1,
 desc:"The sanctuary of the Moon Squad. Safe, fortified, and growing.",
 features:["The Forge — Repair & Enchant","The Infirmary — Heal & Purify","The Ledger — Daily Shop","The Bunkhouse — Personal Quarters"],
 connectedTo:["forest","kingdom","caverns","library","edge"]},
-
-  {id:"forest",name:"The Dark Enchanted Forest",short:"Forest",icon:"🌲",color:"#2e7d32",x:18,y:28,danger:3,
+{id:"forest",name:"The Dark Enchanted Forest",short:"Forest",icon:"🌲",color:"#2e7d32",x:18,y:28,danger:3,
 desc:"Ancient. Breathing. The trees here remember everything.",
 features:["Hollow-adjacent plant material at tree line","Ashen Pack territory — Gravenor hunts here","Forest caches hidden throughout","Sound travels strangely"],
 connectedTo:["kingdom","edge"]},
@@ -1476,14 +1389,14 @@ TikTok Live battles between two players (500 coin minimum to initiate).
 • Winner receives a payout dropped in their own multi-guest live stream.
 • Above 5k coins: Winner gets 60% of total. Below 5k coins: Winner gets 40% of total.
 
-CONSEQUENCE LADDER:
-• MINOR (<5k gap): Lose title OR stat debuff
-• MODERATE (5k-9.9k gap): Cursed for 2 sessions OR item stolen
-• MAJOR (10k-19.9k gap): Exile OR servant
-• SEVERE (20k-44.9k gap): Killed OR curse + exile + theft
+        CONSEQUENCE LADDER:
+        • MINOR (<5k gap): Lose title OR stat debuff
+        • MODERATE (5k-9.9k gap): Cursed for 2 sessions OR item stolen
+        • MAJOR (10k-19.9k gap): Exile OR servant
+        • SEVERE (20k-44.9k gap): Killed OR curse + exile + theft
 
-RAID SPLIT POTS:
-If the Moon Squad successfully completes a Tier 3 or Tier 4 massive raid against a stronghold, a 30,000 TikTok Coin prize pot is split evenly among all surviving participants.`},
+        RAID SPLIT POTS:
+        If the Moon Squad successfully completes a Tier 3 or Tier 4 massive raid against a stronghold, a 30,000 TikTok Coin prize pot is split evenly among all surviving participants.`},
 
 {id:"curses",title:"🌑 Death & Void Infections",content:`DEATH VS DOWNED:
 At 0 HP, you are Downed. A Healer can revive you this session. If the session ends before you are healed, you are Permanently Dead. Your name is retired forever. You must pay for a Full Resurrection (6,000 coins) or roll a new character.
@@ -1638,7 +1551,6 @@ const ARSENAL_ARMOR = {
   ]
 };
 
-
 const ARSENAL_ENCHANTMENTS = [
   { name: "Moon Squad Challenge Coin", slot: "Trinket / Artifact", rarity: "Mythic", effect: "UNIQUE. Holder can veto one GM d20 roll per arc, or automatically rally the squad during a Boss Phase.", location: "Void-Sealed Reliquary", lore: "A heavy, cold coin bearing the insignia of the Moon Squad. It bridges the gap between the game and reality.", image: "🪙", color: "#ce93d8", bg: "rgba(30,5,50,0.8)" },
   { name: "Hollow Whisper", slot: "Weapon or Helmet", rarity: "Uncommon", effect: "Alerts carrier when an ambush or hidden threat is within 30 feet.", location: "Hollow’s Edge enchanters", lore: "The Hollow whispers constantly. This enchantment just makes one specific warning audible.", image: "👂", color: "#66bb6a", bg: "rgba(10,40,15,0.8)" },
@@ -1671,7 +1583,7 @@ const ARSENAL_LOOT_BINS = [
 
 
 // Helper functions
-  function renderHearts(hp, maxHp) {
+function renderHearts(hp, maxHp) {
   const validMax = maxHp || 10;
   const validHp = isNaN(hp) ? 0 : hp;
   let hearts = '';
@@ -1695,13 +1607,13 @@ function getEnchant(cls, roll) { return (ENCHANTMENTS[cls]||[]).find(r => roll >
 function getDestiny(cls, roll) { return (DESTINY_THREADS[cls]||[]).find(r => roll >= r.r[0] && roll <= r.r[1]); }
 function d20() { return Math.floor(Math.random() * 20) + 1; }
 function getDiceDisplay(r) {
-if (!r) return null;
-if (r === 1) return {label:"💀 FUMBLE",desc:"Catastrophic backfire.",bg:"#b71c1c",glow:"#ef5350"};
-if (r <= 4) return {label:"✗ FAIL",desc:"Action fails entirely.",bg:"#c62828",glow:"#ef5350"};
-if (r <= 9) return {label:"⚠ WEAK HIT",desc:"Partial — something goes wrong.",bg:"rgba(100,40,5,0.95)",glow:"#ff9800"};
-if (r <= 14) return {label:"✓ SUCCESS",desc:"Clean success.",bg:"rgba(10,50,20,0.95)",glow:"#4caf50"};
-if (r <= 19) return {label:"★ STRONG HIT",desc:"Success + bonus effect.",bg:"rgba(5,30,80,0.95)",glow:"#4fc3f7"};
-return {label:"⚡ CRITICAL!",desc:"LEGENDARY. ANNOUNCE IT.",bg:"rgba(60,10,100,0.95)",glow:"#ce93d8"};
+  if (!r) return null;
+  if (r === 1) return {label:"💀 FUMBLE",desc:"Catastrophic backfire.",bg:"#b71c1c",glow:"#ef5350"};
+  if (r <= 4) return {label:"✗ FAIL",desc:"Action fails entirely.",bg:"#c62828",glow:"#ef5350"};
+  if (r <= 9) return {label:"⚠ WEAK HIT",desc:"Partial — something goes wrong.",bg:"rgba(100,40,5,0.95)",glow:"#ff9800"};
+  if (r <= 14) return {label:"✓ SUCCESS",desc:"Clean success.",bg:"rgba(10,50,20,0.95)",glow:"#4caf50"};
+  if (r <= 19) return {label:"★ STRONG HIT",desc:"Success + bonus effect.",bg:"rgba(5,30,80,0.95)",glow:"#4fc3f7"};
+  return {label:"⚡ CRITICAL!",desc:"LEGENDARY. ANNOUNCE IT.",bg:"rgba(60,10,100,0.95)",glow:"#ce93d8"};
 }
 function getPlayerStats(p) {
   const base = CLASS_BASE_STATS[p.cls] || {STR:5,DEF:5,INT:5,WIS:5,SPD:5,CHA:5,LCK:5};
@@ -1710,14 +1622,12 @@ function getPlayerStats(p) {
   const raceStats = p.race && RACES[p.race] ? RACES[p.race].stats : {STR:0,DEF:0,INT:0,WIS:0,SPD:0,CHA:0,LCK:0};
   const primary = PRIMARY_STAT[p.cls] || "STR";
   
-  // ✦ NEW: Calculate Gear Bonuses
   let gearDefBonus = 0;
   let gearSpdBonus = 0;
   
   if (p.inventory) {
     p.inventory.forEach(invItem => {
       if (invItem.equipped) {
-        // Look up Armor Stats
         for (const cls in ARSENAL_ARMOR) {
           const foundArmor = ARSENAL_ARMOR[cls].find(a => a.name === invItem.name);
           if (foundArmor) {
@@ -1743,19 +1653,12 @@ function getPlayerStats(p) {
        if (cData.statBuff && cData.statBuff[s]) calc += cData.statBuff[s];
      }
      
-     // ✦ NEW: Hall of Fame +3 Charisma Buff
      if (p.isHoF && s === 'CHA') calc += 3;
 
      finalStats[s] = (p.statOverrides && p.statOverrides[s] !== undefined) ? p.statOverrides[s] : calc;
   }
   return finalStats;
 }
-
-
-function rangeLabel(r) { return r[0] === r[1] ? String(r[0]) : r[0]+'-'+r[1]; }
-
-
-
 
 function rangeLabel(r) { return r[0] === r[1] ? String(r[0]) : r[0]+'-'+r[1]; }
 
@@ -1770,7 +1673,7 @@ const STATE = {
   tab: 'players',
   compendiumTab: 'races', 
   rulesTab: 'economy',    
-    rosterTab: 'living',
+  rosterTab: 'living',
   orphanedCompanions: load('orphaned', []),
   players: load('players', []),
   sessionLog: load('session_log', []),
@@ -1831,8 +1734,7 @@ const STATE = {
 
 function saveAll() {
   save('players', STATE.players); save('session_log', STATE.sessionLog); save('session_active', STATE.sessionActive); save('session_number', STATE.sessionNumber); save('session_start_time', STATE.sessionStartTime); save('map_pins', STATE.mapPins); save('map_events', STATE.mapEvents); save('map_danger', STATE.mapDanger); save('raid_history', STATE.raidHistory); save('base_rooms', STATE.baseRooms); save('base_residents', STATE.baseResidents); save('base_defense', STATE.baseDefense); save('vaults', STATE.vaults); save('packs', STATE.packs); save('villains_live', STATE.villainsLive); save('custom_villains', STATE.customVillains); 
-save('orphaned', STATE.orphanedCompanions);
-
+  save('orphaned', STATE.orphanedCompanions);
 }
 
 function addLog(entry) {
@@ -1845,13 +1747,14 @@ function updatePlayer(id, updates) {
   const idx = STATE.players.findIndex(p => p.id === id);
   if (idx > -1) { STATE.players[idx] = {...STATE.players[idx], ...updates}; save('players', STATE.players); }
 }
+
 function overrideStat(id, stat, val) {
   const p = STATE.players.find(x => x.id === id);
   if(!p) return;
   if(!p.statOverrides) p.statOverrides = {};
   
   if(val === '' || val === null) {
-    delete p.statOverrides[stat]; // Clears the override, reverts to auto-math
+    delete p.statOverrides[stat];
     addLog({type:'note', who:p.charname, what:`Cleared GM Override for ${stat}. Reverted to auto-calc.`});
   } else {
     p.statOverrides[stat] = parseInt(val);
@@ -1859,7 +1762,7 @@ function overrideStat(id, stat, val) {
   }
   saveAll(); render();
 }
-// ✦ Cut 1: Villain Phase & Stat Overrides
+
 function updateVillainPhase(id, phaseIdx) {
   if (!STATE.villainPhases) STATE.villainPhases = {};
   STATE.villainPhases[id] = phaseIdx;
@@ -1879,6 +1782,7 @@ function overrideVillain(id, stat, val) {
   }
   saveAll(); render();
 }
+
 function buyCompanion(playerId, type) {
   const p = STATE.players.find(x => x.id === playerId);
   const cData = COMPANION_TYPES[type];
@@ -1932,17 +1836,23 @@ const TABS=[
   {id:'log',label:'⏱ Log'}
 ];
 
-
-
 function render(){
   const tb=document.getElementById('tab-bar');
   const pn=document.getElementById('panel');
   if(!tb||!pn) return;
 
-  tb.innerHTML = TABS.map(t => `<div class="tab${STATE.tab === t.id ? ' active' : ''}" onclick="STATE.tab='${t.id}';render()">${t.label}</div>`).join('');
+  tb.innerHTML = `
+    <div class="tab-container" style="background:rgba(5,4,18,0.98); border-bottom:1px solid var(--border); padding:0;">
+      ${TABS.map(t => `
+        <button class="tab-item tab-item--underline ${STATE.tab === t.id ? 'active' : ''}" onclick="STATE.tab='${t.id}';render()">
+          ${t.label}
+        </button>
+      `).join('')}
+    </div>`;
+
   pn.className = 'panel fade-in';
 
-        switch(STATE.tab){
+  switch(STATE.tab){
     case 'players':  pn.innerHTML=renderPlayers();break;
     case 'create':   pn.innerHTML=renderCreate();break;
     case 'npcs':     pn.innerHTML=renderNPCs();break;
@@ -1957,8 +1867,6 @@ function render(){
     default:         pn.innerHTML=renderPlayers();
   }
 
-
-
   const pm=document.getElementById('player-modal');
   const im=document.getElementById('inventory-modal');
   if(pm){pm.innerHTML=STATE.selectedPlayer?renderPlayerModal():'';pm.className='modal-overlay'+(STATE.selectedPlayer?' active':'');}
@@ -1969,21 +1877,21 @@ function esc(s){if(s==null)return'';return String(s).replace(/&/g,'&amp;').repla
 function hpColor(pct){return pct>60?'var(--green)':pct>30?'#ff9800':'var(--red)';}
 
 function statBars(p){
-const stats=getPlayerStats(p);
-return '<div class="stat-grid">'+Object.entries(stats).map(([s,v])=>{
-const c=STAT_COLORS[s];const pct=Math.min(100,(v/12)*100);
-return`<div><div class="stat-label"><span style="color:${c};font-weight:bold">${s}</span><span style="color:${c}">${v}</span></div><div class="stat-bar-wrap"><div class="stat-bar" style="width:${pct}%;background:${c};box-shadow:0 0 4px ${c}80"></div></div></div>`;
-}).join('')+'</div>';
+  const stats=getPlayerStats(p);
+  return '<div class="stat-grid">'+Object.entries(stats).map(([s,v])=>{
+    const c=STAT_COLORS[s];const pct=Math.min(100,(v/12)*100);
+    return`<div><div class="stat-label"><span style="color:${c};font-weight:bold">${s}</span><span style="color:${c}">${v}</span></div><div class="stat-bar-wrap"><div class="stat-bar" style="width:${pct}%;background:${c};box-shadow:0 0 4px ${c}80"></div></div></div>`;
+  }).join('')+'</div>';
 }
 
 function renderPlayers() {
   if(!STATE.rosterTab) STATE.rosterTab = 'living';
   
   const nav = `
-    <div class="tabs" style="margin-bottom:12px; border-radius:8px; border:1px solid var(--border); overflow:hidden">
-      <div class="tab ${STATE.rosterTab==='living'?'active':''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.rosterTab='living';render()">👥 Active</div>
-      <div class="tab ${STATE.rosterTab==='hof'?'active':''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.rosterTab='hof';render()">👑 Legends</div>
-      <div class="tab ${STATE.rosterTab==='graveyard'?'active':''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.rosterTab='graveyard';render()">🪦 Graveyard</div>
+    <div class="tab-container" style="margin-bottom:12px; border-radius:8px; border:1px solid var(--border); overflow:hidden; background:rgba(10,8,30,0.8)">
+      <button class="tab-item tab-item--underline ${STATE.rosterTab==='living'?'active':''}" style="flex:1; text-align:center" onclick="STATE.rosterTab='living';render()">👥 Active</button>
+      <button class="tab-item tab-item--underline ${STATE.rosterTab==='hof'?'active':''}" style="flex:1; text-align:center" onclick="STATE.rosterTab='hof';render()">👑 Legends</button>
+      <button class="tab-item tab-item--underline ${STATE.rosterTab==='graveyard'?'active':''}" style="flex:1; text-align:center" onclick="STATE.rosterTab='graveyard';render()">🪦 Graveyard</button>
     </div>
     <div style="display:flex; gap:8px; margin-bottom:12px">
       <div style="position:relative; flex:1">
@@ -2041,8 +1949,6 @@ function renderPlayers() {
 
 function playerCard(p){
   const pct=Math.max(0,(p.hp/p.maxHp)*100);
-  
-  // Apply our new CSS classes
   const extraClass = p.isDead ? ' stone-card' : (p.isHoF ? ' hof-card' : '');
 
   return `
@@ -2075,8 +1981,6 @@ function playerCard(p){
   `}
 </div>`;
 }
-
-
 
 function renderPlayerModal() {
   const p = STATE.players.find(x => x.id === STATE.selectedPlayer); 
@@ -2114,7 +2018,6 @@ function renderPlayerModal() {
       });
     }
   });
-
 
   // 2. Logic for Arc Progression
   const adv = p.advancement || { raids: 0, battles: 0 };
@@ -2223,7 +2126,7 @@ function renderPlayerModal() {
   
     <div style="display:flex; gap:6px; margin-top:10px; margin-bottom:12px; align-items:stretch"> 
     <input class="input" style="flex:1; min-width:0;" id="inv-add-${p.id}" placeholder="Item name..."> 
-    <select class="select" id="inv-cat-${p.id}" style="width:auto; flex-shrink:0; padding-right:10px; background:rgba(10,8,30,0.9) url('data:image/svg+xml;utf8,<svg fill=%22white%22 height=%2224%22 viewBox=%220 0 24 24%22 width=%2224%22 xmlns=%22http://www.w3.org/2000/svg%22><path d=%22M7 10l5 5 5-5z%22/><path d=%22M0 0h24v24H0z%22 fill=%22none%22/></svg>') no-repeat right 4px center; -webkit-appearance:none;">
+    <select class="select" id="inv-cat-${p.id}" style="width:auto; flex-shrink:0; padding-right:10px; background:rgba(10,8,30,0.9); -webkit-appearance:none;">
       <option value="weapon">Weapon</option>
       <option value="armor">Armor</option>
       <option value="enchantment">Enchant</option>
@@ -2232,7 +2135,6 @@ function renderPlayerModal() {
     </select>
     <button class="btn btn-sm btn-green" style="flex-shrink:0;" onclick="addInvItem(${p.id})">Add</button> 
   </div> 
-
 
   ${progHTML}
 
@@ -2289,10 +2191,8 @@ function renderPlayerModal() {
     <button class="btn" style="background:rgba(20,16,50,0.9);color:var(--dim);border:1px solid var(--border)" onclick="STATE.selectedPlayer=null;render()">Close</button> 
   </div>
 
-</div>`; //
-}//
-
-
+</div>`; 
+}
 
 function renderCreate(){
 const c=STATE.creation;
@@ -2346,8 +2246,6 @@ ${c.cls?`<div class="roll-box"><div class="section-title">Creation Rolls — ${c
 <button class="btn btn-purple btn-full" style="margin-top:12px" onclick="addPlayer()">✦ Add to The Hollow Realm</button> </div>`;
 }
 
-
-
 function renderCreationRolls(c){
 const rolls=[
 {key:'repRoll',label:'Roll 1 — Reputation Title',fn:r=>getRep(c.cls,r),nameKey:'title',descKey:'passive',col:'#ffb300',
@@ -2391,9 +2289,9 @@ function renderNPCs() {
   if (!STATE.npcMainTab) STATE.npcMainTab = 'hq';
 
   const nav = `
-    <div class="tabs" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden">
-      <div class="tab ${STATE.npcMainTab === 'hq' ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8); padding:10px 4px" onclick="STATE.npcMainTab='hq';render()">🏠 HQ Residents</div>
-      <div class="tab ${STATE.npcMainTab === 'world' ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8); padding:10px 4px" onclick="STATE.npcMainTab='world';render()">🌍 World NPCs</div>
+    <div class="tab-container" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden; background:rgba(10,8,30,0.8)">
+      <button class="tab-item tab-item--underline ${STATE.npcMainTab === 'hq' ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.npcMainTab='hq';render()">🏠 HQ Residents</button>
+      <button class="tab-item tab-item--underline ${STATE.npcMainTab === 'world' ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.npcMainTab='world';render()">🌍 World NPCs</button>
     </div>
   `;
 
@@ -2477,21 +2375,21 @@ function renderNPCs() {
     const n = WORLD_NPCS[STATE.worldNpcTab];
 
     const npcListNav = `
-      <div class="arsenal-nav" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px; padding-bottom:4px;">
         ${npcNames.map(name => `
-          <div class="arsenal-tab ${STATE.worldNpcTab === name ? 'active' : ''}" onclick="STATE.worldNpcTab='${name}';STATE.worldNpcSec='lore';render()">
+          <button class="tab-item tab-item--pill ${STATE.worldNpcTab === name ? 'active' : ''}" onclick="STATE.worldNpcTab='${name}';STATE.worldNpcSec='lore';render()">
             ${WORLD_NPCS[name].icon} ${name.split(',')[0]}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
 
     const subNav = `
-      <div class="lore-tab-bar" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px">
         ${['lore', 'rules', 'shop'].map(sec => `
-          <div class="lore-tab ${STATE.worldNpcSec === sec ? 'active' : ''}" onclick="STATE.worldNpcSec='${sec}';render()">
+          <button class="tab-item tab-item--pill ${STATE.worldNpcSec === sec ? 'active' : ''}" onclick="STATE.worldNpcSec='${sec}';render()">
             ${sec === 'lore' ? 'Identity & Lore' : sec === 'rules' ? 'Encounter Rules' : 'The Shop'}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
@@ -2628,12 +2526,12 @@ function renderVillains() {
       </div>
       ` : ''}
 
-      <div class="lore-tab-bar" style="margin-top:12px">
+      <div class="tab-container" style="margin-top:12px; margin-bottom:4px;">
         ${['lore', 'combat', 'phases', 'loot'].map(sec => `
-          <div class="lore-tab ${STATE.villainTab === v.id && STATE.villainSec === sec ? 'active' : ''}" 
+          <button class="tab-item tab-item--pill ${STATE.villainTab === v.id && STATE.villainSec === sec ? 'active' : ''}" 
                onclick="STATE.villainTab='${v.id}'; STATE.villainSec='${sec}'; render()">
             ${sec.charAt(0).toUpperCase() + sec.slice(1)}
-          </div>
+          </button>
         `).join('')}
       </div>
       <div style="margin-top:10px; font-size:0.7rem; min-height:80px; color:var(--text); line-height:1.4">
@@ -2682,8 +2580,6 @@ function renderVillainSubSection(v) {
     default: return 'Select a section above.';
   }
 }
-
-
 
 function renderDice(){
 const display=getDiceDisplay(STATE.diceRoll);
@@ -2755,15 +2651,11 @@ ${spin?'Rolling...':'ROLL THE DICE'}
   </div>`:''}`;
 }
 
-// ═══════════════════════════════════════════════════
-// BOX BATTLE (THE TOLL & ECONOMY)
-// ═══════════════════════════════════════════════════
 function renderBattle() {
   const mins = Math.floor(STATE.battleTime / 60);
   const secs = (STATE.battleTime % 60).toString().padStart(2, '0');
   const pctBar = Math.min(100, Math.max(0, (STATE.battleTime / 180) * 100));
 
-  // The Narrative Consequence based on the GAP
   const THE_TOLL_TIERS = [
     {min:0,max:4999,tier:'⚠ MINOR TOLL',cons:'Lose title OR stat debuff',color:'#4caf50'},
     {min:5000,max:9999,tier:'⚔ MODERATE TOLL',cons:'Cursed 2 sessions OR item stolen',color:'#ff9800'},
@@ -2777,16 +2669,13 @@ function renderBattle() {
   const totalCoins = c1 + c2;
   const gap = Math.abs(c1 - c2);
   
-  // Economy Math
-  const hostCut = Math.floor(totalCoins * 0.24); // Your 24% Multi-Guest Cut
+  const hostCut = Math.floor(totalCoins * 0.24);
   const isP1Winner = c1 > c2;
   const winnerScore = isP1Winner ? c1 : c2;
   const winnerPct = winnerScore >= 5000 ? 0.60 : 0.40;
   const winnerDeposit = Math.floor(hostCut * winnerPct);
 
   const currentToll = THE_TOLL_TIERS.find(t => gap >= t.min && gap <= t.max) || THE_TOLL_TIERS[0];
-
-  // Filter only ALIVE players for the dropdowns
   const alivePlayers = STATE.players.filter(p => !p.isDead);
 
   return `
@@ -2860,7 +2749,6 @@ function renderBattle() {
     </div>`;
 }
 
-
 function logBattleResult() {
   const c1 = parseInt(STATE.battleCoins1) || 0;
   const c2 = parseInt(STATE.battleCoins2) || 0;
@@ -2875,7 +2763,6 @@ function logBattleResult() {
   const winnerPct = winnerScore >= 5000 ? 0.60 : 0.40;
   const winnerDeposit = Math.floor(hostCut * winnerPct);
   
-  // Find the winning player object to deposit coins
   const winnerObj = STATE.players.find(p => p.charname === winnerName);
   
   if (winnerObj) {
@@ -2894,9 +2781,6 @@ function logBattleResult() {
     alert("Start a live session to log this battle to the timeline.");
   }
 }
-
-
-
 
 function renderLog(){
 const elapsed=STATE.sessionActive&&STATE.sessionStartTime?Math.floor((Date.now()-STATE.sessionStartTime)/60000):0;
@@ -2927,9 +2811,14 @@ ${Object.entries(LOG_TYPES).map(([k,t])=>`<button class="btn btn-sm" style="font
   ${STATE.sessionLog.length?`
     <div class="card">
       <input class="input" style="margin-bottom:8px" placeholder="🔍 Search..." value="${esc(STATE.logSearch)}" oninput="STATE.logSearch=this.value;render()">
-      <div style="display:flex;gap:5px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:10px">
-        <button class="btn btn-sm" style="${STATE.logFilter==='all'?'background:rgba(138,90,220,0.2);color:var(--purple-light);border-color:var(--purple)':''}" onclick="STATE.logFilter='all';render()">All (${STATE.sessionLog.length})</button>
-        ${Object.entries(LOG_TYPES).map(([k,t])=>{const cnt=STATE.sessionLog.filter(e=>e.type===k).length;if(!cnt)return'';return`<button class="btn btn-sm" style="flex-shrink:0;${STATE.logFilter===k?'background:rgba(10,8,30,0.9);color:'+t.color+';border-color:'+t.color:''}" onclick="STATE.logFilter='${k}';render()">${t.icon} ${cnt}</button>`;}).join('')}
+      <div class="tab-container" style="margin-bottom:12px; padding-bottom:4px;">
+        <button class="tab-item tab-item--pill ${STATE.logFilter==='all'?'active':''}" onclick="STATE.logFilter='all';render()">All (${STATE.sessionLog.length})</button>
+        ${Object.entries(LOG_TYPES).map(([k,t]) => {
+          const cnt=STATE.sessionLog.filter(e=>e.type===k).length;
+          if(!cnt) return '';
+          const isActive = STATE.logFilter === k;
+          return \`<button class="tab-item tab-item--pill \${isActive ? 'active' : ''}" style="\${isActive ? \`border-color:\${t.color}; color:\${t.color}; background:rgba(10,8,30,0.9)\` : ''}" onclick="STATE.logFilter='\${k}';render()">\${t.icon} \${cnt}</button>\`;
+        }).join('')}
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;">
         <span style="font-size:0.62rem;color:var(--dim);font-family:Arial,sans-serif">${filtered.length} entries</span>
@@ -2964,8 +2853,6 @@ ${Object.entries(LOG_TYPES).map(([k,t])=>`<button class="btn btn-sm" style="font
   `:`<div class="empty-state"><div class="empty-icon">⏱</div><div>No session started yet.</div></div>`}`;
 }
 
-
-// MAP TAB
 function renderMap(){
 if(STATE.mapLocation)return renderMapLocation();
 return`<div class="card" style="margin-bottom:10px"> <div class="section-title">Map Legend</div> <div style="display:flex;gap:8px;flex-wrap:wrap">${Object.entries(PIN_TYPES).map(([k,pt])=>`<div style="display:flex;align-items:center;gap:4px"><div style="width:9px;height:9px;border-radius:50%;background:${pt.color};box-shadow:0 0 5px ${pt.color}"></div><span style="font-size:0.6rem;color:var(--dim);font-family:Arial,sans-serif">${pt.label}</span></div>`).join('')}</div>
@@ -3118,13 +3005,6 @@ function renderMapLocation() {
   `;
 }
 
-
-// ═══════════════════════════════════════════════════
-// REMAINING UI TAB RENDERERS
-// ═══════════════════════════════════════════════════
-// ═══════════════════════════════════════════════════
-// MOON SQUAD BANK SYSTEM
-// ═══════════════════════════════════════════════════
 function initWallet(p) {
   if (p.walletBalance === undefined) p.walletBalance = 0;
   if (!p.transactions) p.transactions = [];
@@ -3312,8 +3192,6 @@ function renderRaids() {
   `;
 }
 
-
-
 function renderArsenal() {
   const classes = ['Warrior', 'Wizard', 'Rogue', 'Healer', 'Merchant', 'Bard'];
   const categories = ['Weapons', 'Armor', 'Enchantments', 'World Loot'];
@@ -3321,11 +3199,11 @@ function renderArsenal() {
   if (!STATE.arsenalCategory) STATE.arsenalCategory = 'Weapons';
 
   const catNav = `
-    <div class="arsenal-nav" style="margin-bottom:8px">
+    <div class="tab-container" style="margin-bottom:8px">
       ${categories.map(c => `
-        <div class="arsenal-tab ${STATE.arsenalCategory === c ? 'active' : ''}" onclick="STATE.arsenalCategory='${c}';render()">
+        <button class="tab-item tab-item--pill ${STATE.arsenalCategory === c ? 'active' : ''}" onclick="STATE.arsenalCategory='${c}';render()">
           ${c}
-        </div>
+        </button>
       `).join('')}
     </div>
   `;
@@ -3335,11 +3213,11 @@ function renderArsenal() {
   if (STATE.arsenalCategory === 'Weapons' || STATE.arsenalCategory === 'Armor') {
     const dataSource = STATE.arsenalCategory === 'Weapons' ? ARSENAL_WEAPONS : ARSENAL_ARMOR;
     content += `
-      <div class="arsenal-nav">
+      <div class="tab-container" style="margin-bottom:12px">
         ${classes.map(c => `
-          <div class="arsenal-tab ${STATE.arsenalTab === c ? 'active' : ''}" onclick="STATE.arsenalTab='${c}';render()">
+          <button class="tab-item tab-item--pill ${STATE.arsenalTab === c ? 'active' : ''}" onclick="STATE.arsenalTab='${c}';render()">
             ${CLASS_ICON[c]} ${c}
-          </div>
+          </button>
         `).join('')}
       </div>
       <div class="section-title">${STATE.arsenalTab} ${STATE.arsenalCategory}</div>
@@ -3403,7 +3281,6 @@ function renderArsenal() {
   return catNav + content;
 }
 
-
 function renderBase() {
   return `
     <div class="card-glow">
@@ -3450,11 +3327,11 @@ function renderClasses() {
   const primary = PRIMARY_STAT[STATE.classTab];
 
   return `
-    <div class="arsenal-nav">
+    <div class="tab-container" style="margin-bottom:12px; padding-bottom:4px;">
       ${CLASSES.map(cls => `
-        <div class="arsenal-tab ${STATE.classTab === cls ? 'active' : ''}" style="border-color:${STATE.classTab === cls ? STAT_COLORS[PRIMARY_STAT[cls]] : 'var(--border)'}" onclick="STATE.classTab='${cls}';render()">
+        <button class="tab-item tab-item--pill ${STATE.classTab === cls ? 'active' : ''}" style="border-color:${STATE.classTab === cls ? STAT_COLORS[PRIMARY_STAT[cls]] : 'var(--border)'}" onclick="STATE.classTab='${cls}';render()">
           ${CLASS_ICON[cls]} ${cls}
-        </div>
+        </button>
       `).join('')}
     </div>
 
@@ -3472,11 +3349,11 @@ function renderClasses() {
 
       <div class="divider"></div>
 
-      <div class="lore-tab-bar">
+      <div class="tab-container" style="margin-bottom:12px;">
         ${['overview', 'mechanics', 'gift', 'lore'].map(sec => `
-          <div class="lore-tab ${STATE.classSec === sec ? 'active' : ''}" onclick="STATE.classSec='${sec}';render()">
+          <button class="tab-item tab-item--pill ${STATE.classSec === sec ? 'active' : ''}" onclick="STATE.classSec='${sec}';render()">
             ${sec.charAt(0).toUpperCase() + sec.slice(1)}
-          </div>
+          </button>
         `).join('')}
       </div>
 
@@ -3533,13 +3410,13 @@ function renderClassSection(c, stats, primary) {
 
 function renderRules() {
   return `
-    <div class="lore-tab-bar">
+    <div class="tab-container" style="margin-bottom:12px;">
       ${RULES_SECTIONS.map(s => `
-        <div class="lore-tab ${STATE.rulesTab === s.id ? 'active' : ''}" onclick="STATE.rulesTab='${s.id}';render()">
+        <button class="tab-item tab-item--pill ${STATE.rulesTab === s.id ? 'active' : ''}" onclick="STATE.rulesTab='${s.id}';render()">
           ${s.title.split(' ').pop()}
-        </div>
+        </button>
       `).join('')}
-      <div class="lore-tab ${STATE.rulesTab === 'faq' ? 'active' : ''}" onclick="STATE.rulesTab='faq';render()">FAQ</div>
+      <button class="tab-item tab-item--pill ${STATE.rulesTab === 'faq' ? 'active' : ''}" onclick="STATE.rulesTab='faq';render()">FAQ</button>
     </div>
 
     <div class="card">
@@ -3625,7 +3502,6 @@ function addPlayer() {
   STATE.creation = {username:'',charname:'',cls:'',race:'',origin:'',payment:'tiktok',notes:'',repRoll:null,traitRoll:null,weaponRoll:null,skillRoll:null,shadowRoll:null,enchantRoll:null,destinyRoll:null,playerImg:null,charImg:null};
   saveAll(); render();
 }
-
 
 function rollDice() {
   if(STATE.diceSpinning) return;
@@ -3751,6 +3627,7 @@ function rmInvItem(playerId, index) {
     saveAll(); render(); 
   }
 }
+
 function toggleEquip(playerId, index) {
   const p = STATE.players.find(x => x.id === playerId);
   if(!p || !p.inventory[index]) return;
@@ -3792,7 +3669,6 @@ function rmConsequence(playerId, index) {
     saveAll(); render(); 
   }
 }
-
 
 function markDead(playerId) {
   const p = STATE.players.find(x => x.id === playerId);
@@ -3905,7 +3781,6 @@ function adjLoyalty(index, delta) {
   saveAll(); render();
 }
 
-
 function toggleVillain(id) {
   if (!STATE.villainsLive) STATE.villainsLive = [];
   if (STATE.villainsLive.includes(id)) {
@@ -4006,6 +3881,7 @@ function startRaid() {
   saveAll();
   render();
 }
+
 function rollBaseSiege() {
   const activeVillains = VILLAIN_LORE.filter(v => (STATE.villainsLive || []).includes(v.id));
   if (activeVillains.length === 0) { alert("No active Villains to lead a siege!"); return; }
@@ -4047,6 +3923,7 @@ function rollBaseSiege() {
   }
   render();
 }
+
 function resolveTheft(loserName) {
   const loser = STATE.players.find(p => p.charname === loserName);
   if (!loser) return alert("Target not found in player roster.");
@@ -4066,11 +3943,7 @@ function resolveTheft(loserName) {
     alert(`THEFT SUCCESSFUL! (Lockbox Lv.${lockboxLv} gave ${blockChance}% protection. Rolled ${roll})`);
     if(STATE.sessionActive) addLog({type:'battle', who:'System', what:`Theft against ${loserName} SUCCEEDED. Winner takes an item!`});
   }
-}//
-
-
-
-
+}
 
 function handleImageUpload(input, targetProperty) {
   const file = input.files[0];
@@ -4106,6 +3979,7 @@ function copyToClipboard(txt) {
     console.error('Failed to copy: ', err);
   });
 }
+
 function renderCompendium() {
   const tabs = [
     {id: 'races', label: '🧬 Races'},
@@ -4116,11 +3990,11 @@ function renderCompendium() {
   ];
 
   const nav = `
-    <div class="tabs" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden">
+    <div class="tab-container" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden; background:rgba(10,8,30,0.8)">
       ${tabs.map(t => `
-        <div class="tab ${STATE.compendiumTab === t.id ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8); padding:10px 4px" onclick="STATE.compendiumTab='${t.id}';render()">
+        <button class="tab-item tab-item--underline ${STATE.compendiumTab === t.id ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.compendiumTab='${t.id}';render()">
           ${t.label}
-        </div>
+        </button>
       `).join('')}
     </div>
   `;
@@ -4135,21 +4009,21 @@ function renderCompendium() {
     const r = RACES[STATE.compendiumRaceTab];
 
     const raceNav = `
-      <div class="arsenal-nav" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px">
         ${raceNames.map(name => `
-          <div class="arsenal-tab ${STATE.compendiumRaceTab === name ? 'active' : ''}" onclick="STATE.compendiumRaceTab='${name}';STATE.compendiumRaceSec='overview';render()">
+          <button class="tab-item tab-item--pill ${STATE.compendiumRaceTab === name ? 'active' : ''}" onclick="STATE.compendiumRaceTab='${name}';STATE.compendiumRaceSec='overview';render()">
             ${RACES[name].icon} ${name}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
 
     const subNav = `
-      <div class="lore-tab-bar" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px">
         ${['overview', 'traits', 'culture', 'lore'].map(sec => `
-          <div class="lore-tab ${STATE.compendiumRaceSec === sec ? 'active' : ''}" onclick="STATE.compendiumRaceSec='${sec}';render()">
+          <button class="tab-item tab-item--pill ${STATE.compendiumRaceSec === sec ? 'active' : ''}" onclick="STATE.compendiumRaceSec='${sec}';render()">
             ${sec.charAt(0).toUpperCase() + sec.slice(1)}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
@@ -4249,21 +4123,21 @@ function renderCompendium() {
     const c = COMPANION_TYPES[STATE.compendiumCompTab];
 
     const compNav = `
-      <div class="arsenal-nav" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px">
         ${compNames.map(name => `
-          <div class="arsenal-tab ${STATE.compendiumCompTab === name ? 'active' : ''}" onclick="STATE.compendiumCompTab='${name}';STATE.compendiumCompSec='overview';render()">
+          <button class="tab-item tab-item--pill ${STATE.compendiumCompTab === name ? 'active' : ''}" onclick="STATE.compendiumCompTab='${name}';STATE.compendiumCompSec='overview';render()">
             ${COMPANION_TYPES[name].icon} ${name}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
 
     const subNav = `
-      <div class="lore-tab-bar" style="margin-bottom:12px">
+      <div class="tab-container" style="margin-bottom:12px">
         ${['overview', 'care', 'lore'].map(sec => `
-          <div class="lore-tab ${STATE.compendiumCompSec === sec ? 'active' : ''}" onclick="STATE.compendiumCompSec='${sec}';render()">
+          <button class="tab-item tab-item--pill ${STATE.compendiumCompSec === sec ? 'active' : ''}" onclick="STATE.compendiumCompSec='${sec}';render()">
             ${sec.charAt(0).toUpperCase() + sec.slice(1)}
-          </div>
+          </button>
         `).join('')}
       </div>
     `;
@@ -4322,7 +4196,6 @@ function renderCompendium() {
   return nav + content;
 }
 
-
 function rollDailyShop() {
   const b = LEDGER_POOLS.bargain[Math.floor(Math.random() * LEDGER_POOLS.bargain.length)];
   const e = LEDGER_POOLS.essential[Math.floor(Math.random() * LEDGER_POOLS.essential.length)];
@@ -4353,16 +4226,17 @@ function upgradePersonalQuarter(playerId, type) {
   addLog({type:'gift', who:p.charname, what: `Upgraded ${PERSONAL_QUARTERS[type].name} to Level ${p.quarters[type]}.`});
   saveAll(); render();
 }
+
 function renderHQ() {
   if (!STATE.hqTab) STATE.hqTab = 'facilities';
   const loc = WORLD_LOCATIONS.find(l => l.id === 'hq');
   
   const hqNav = `
     <button class="btn btn-sm" style="margin-bottom:14px" onclick="STATE.mapLocation=null;render()">← Exit HQ</button>
-    <div class="tabs" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden">
-      <div class="tab ${STATE.hqTab === 'facilities' ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.hqTab='facilities';render()">🛠 Facilities</div>
-      <div class="tab ${STATE.hqTab === 'ledger' ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.hqTab='ledger';render()">💰 Ledger</div>
-      <div class="tab ${STATE.hqTab === 'bunkhouse' ? 'active' : ''}" style="flex:1; text-align:center; background:rgba(10,8,30,0.8)" onclick="STATE.hqTab='bunkhouse';render()">🛏️ Bunkhouse</div>
+    <div class="tab-container" style="margin-bottom:15px; border-radius:8px; border:1px solid var(--border); overflow:hidden; background:rgba(10,8,30,0.8)">
+      <button class="tab-item tab-item--underline ${STATE.hqTab === 'facilities' ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.hqTab='facilities';render()">🛠 Facilities</button>
+      <button class="tab-item tab-item--underline ${STATE.hqTab === 'ledger' ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.hqTab='ledger';render()">💰 Ledger</button>
+      <button class="tab-item tab-item--underline ${STATE.hqTab === 'bunkhouse' ? 'active' : ''}" style="flex:1; text-align:center;" onclick="STATE.hqTab='bunkhouse';render()">🛏️ Bunkhouse</button>
     </div>
   `;
 
@@ -4465,7 +4339,6 @@ function renderHQ() {
   return hqNav + content;
 }
 
-
 // ✦ Phase 4: Smart Loot & Environmental Curses
 function rollSmartLoot(locId, playerId) {
   const loc = WORLD_LOCATIONS.find(l => l.id === locId);
@@ -4506,6 +4379,7 @@ function rollSmartLoot(locId, playerId) {
   }
   saveAll(); render();
 }
+
 // ✦ Phase 5: Empires & Bounties
 function rollBounty() {
   const b = WANTED_BOUNTIES[Math.floor(Math.random() * WANTED_BOUNTIES.length)];
@@ -4535,6 +4409,7 @@ function adjEmpire(villainId, type, delta) {
   }
   saveAll(); render();
 }
+
 function adjAdvancement(id, prop, delta) {
   const p = STATE.players.find(x => x.id === id);
   if (!p) return;
@@ -4642,12 +4517,8 @@ window.addEventListener('touchend', endDraw);
 
 loopParticles();
 
-  
-
-
 // ═══════════════════════════════════════════════════
 // INITIALIZATION
-
 // ═══════════════════════════════════════════════════
 render();
 
